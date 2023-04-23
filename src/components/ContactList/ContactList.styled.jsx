@@ -11,7 +11,6 @@ export const ListItem = styled.li`
 	display: flex;
 	justify-content: space-between;
 	padding: 15px;
-	background-color: #1a1a1a;
 	border-radius: 15px;
 	margin-top: 15px;
 `
