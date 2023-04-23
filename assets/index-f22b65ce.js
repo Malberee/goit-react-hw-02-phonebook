@@ -80,7 +80,6 @@ Error generating stack: `+o.message+`
 	display: flex;
 	justify-content: space-between;
 	padding: 15px;
-	background-color: #1a1a1a;
 	border-radius: 15px;
 	margin-top: 15px;
 `,o0=vn.div`
