@@ -15,70 +15,69 @@ class App extends Component {
 			{ id: 'id-4', name: 'Жук Борис', number: '227-91-26' },
 		],
 		filter: '',
-		name: '',
-		number: '',
 	}
 
-	onNameChange = (e) => {
-		this.setState({ name: e.currentTarget.value })
-	}
+	onSubmitForm = (newContact) => {
+		const { contacts } = this.state
+		const alreadyExists = this.state.contacts.some(
+			({ name }) => name.toLowerCase() === newContact.name.toLowerCase()
+		)
 
-	onNumberChange = (e) => {
-		this.setState({ number: e.currentTarget.value })
-	}
+		if (alreadyExists) {
+			alert(`${newContact.name.value} is already in contacts`)
+			return
+		}
 
-	onSearchChange = (e) => {
-		this.setState({ filter: e.currentTarget.value.toLowerCase() })
+		this.setState((prevState) => ({
+			contacts: [...prevState.contacts, { ...newContact, id: nanoid() }],
+		}))
 	}
 
 	onRemoveContact = (contactId) => {
-		this.setState({
-			contacts: this.state.contacts.filter(({ id }) => id !== contactId),
-		})
+		this.setState((prevState) => ({
+			contacts: prevState.contacts.filter(({ id }) => id !== contactId),
+		}))
 	}
 
-	onSubmitForm = (e) => {
-		e.preventDefault()
-		const { name, number } = e.currentTarget
-		const names = this.state.contacts.map(({ name }) => name)
-
-		if (!names.includes(name.value)) {
-			this.setState({
-				contacts: [
-					...this.state.contacts,
-					{ name: name.value, number: number.value, id: nanoid() },
-				],
-			})
-		} else alert(`${name.value} is already in contacts`)
+	onSearchChange = (e) => {
+		this.setState({ filter: e.target.value.toLowerCase() })
 	}
 
 	showContacts = () => {
 		const { contacts, filter } = this.state
 
-		return contacts.filter((contact) =>
-			contact.name.toLowerCase().includes(filter)
-		)
+		return contacts.filter(({ name }) => name.toLowerCase().includes(filter))
 	}
 
 	render() {
+		const { contacts, filter } = this.state
 		return (
 			<>
 				<Section title="Phonebook">
 					<ContactForm
-						name={this.state.name}
-						number={this.state.number}
-						onNameChange={this.onNameChange}
-						onNumberChange={this.onNumberChange}
+						// name={this.state.name}
+						// number={this.state.number}
+						// onNameChange={this.onNameChange}
+						// onNumberChange={this.onNumberChange}
 						onSubmitForm={this.onSubmitForm}
 					/>
 				</Section>
 
 				<Section title="Contacts">
-					<Filter filter={this.state.filter} onChange={this.onSearchChange} />
-					<ContactList
-						contacts={this.showContacts()}
-						onRemoveContact={this.onRemoveContact}
-					/>
+					{contacts.length ? (
+						<>
+							<Filter
+								filter={this.state.filter}
+								onChange={this.onSearchChange}
+							/>
+							<ContactList
+								contacts={this.showContacts()}
+								onRemoveContact={this.onRemoveContact}
+							/>
+						</>
+					) : (
+						<p>Not found</p>
+					)}
 				</Section>
 			</>
 		)
